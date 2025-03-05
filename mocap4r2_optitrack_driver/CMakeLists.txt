@@ -16,6 +16,12 @@ set(NATNET_INCLUDE_DIR
   ${CMAKE_CURRENT_SOURCE_DIR}/NatNetSDK/include
 )
 
+# Install the NatNet library with the package
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/NatNetSDK/lib/libNatNet.so
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
@@ -57,8 +63,12 @@ target_link_libraries(mocap4r2_optitrack_driver_main
   ${LIBNATNET_SDK_LIBRARY}
 )
 
+# Set the RPATH so the executable can find libNatNet.so in its own directory
+set_target_properties(mocap4r2_optitrack_driver_main PROPERTIES INSTALL_RPATH "$ORIGIN")
+
 ament_target_dependencies(mocap4r2_optitrack_driver ${dependencies})
 target_link_libraries(mocap4r2_optitrack_driver ${LIBNATNET_SDK_LIBRARY})
+
 
 install(DIRECTORY include/${PROJECT_NAME}
   DESTINATION include/
