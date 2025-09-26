@@ -34,6 +34,12 @@ namespace mocap4r2_optitrack_driver
 using std::placeholders::_1;
 using std::placeholders::_2;
 
+namespace ansi {
+constexpr const char* reset = "\033[0m";
+constexpr const char* red   = "\033[31m";
+constexpr const char* green = "\033[32m";
+}
+
 OptitrackDriverNode::OptitrackDriverNode()
 : ControlledLifecycleNode("mocap4r2_optitrack_driver_node")
 {
@@ -283,7 +289,7 @@ OptitrackDriverNode::connect_optitrack()
   set_settings_optitrack();
 
   if (client->Connect(client_params) == ErrorCode::ErrorCode_OK) {
-    RCLCPP_INFO(get_logger(), "... connected!");
+    RCLCPP_INFO(get_logger(), "%s... mocap connected!%s", ansi::green, ansi::reset);
 
     memset(&server_description, 0, sizeof(server_description));
     client->GetServerDescription(&server_description);
@@ -320,7 +326,7 @@ OptitrackDriverNode::connect_optitrack()
       RCLCPP_DEBUG(get_logger(), "Error getting frame rate.\n");
     }
   } else {
-    RCLCPP_INFO(get_logger(), "... not connected :( ");
+    RCLCPP_INFO(get_logger(), "%s... mocap not connected :( %s", ansi::red, ansi::reset);
     return false;
   }
 
